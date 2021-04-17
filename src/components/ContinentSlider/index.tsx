@@ -78,8 +78,8 @@ export function ContinentSlider() {
                 opacity: 0.2
               }}
             >
-              <Heading as="h2" size="xl" color="white">{location.name}</Heading>
-              <Text color="white">{location.cta}</Text>
+              <Heading position="relative" zIndex="2" as="h2" size="xl" color="white">{location.name}</Heading>
+              <Text position="relative" zIndex="2" color="white">{location.cta}</Text>
             </Flex>
         </SwiperSlide>
       )}
