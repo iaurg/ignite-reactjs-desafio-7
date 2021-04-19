@@ -1,4 +1,9 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import { makeServer } from "../services/mirage"
+
+if(process.env.NODE_ENV === 'development') {
+  makeServer()
+}
 
 const theme = extendTheme({
   colors: {

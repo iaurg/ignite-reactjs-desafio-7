@@ -1,10 +1,15 @@
-import { Avatar, Box, Flex, Image, SimpleGrid, Stack, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Stack, Text, Tooltip } from "@chakra-ui/react";
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Header } from "../../components/Header";
 import { PageHeader } from "../../components/PageHeader";
 import { CityCard } from "../../components/CityCard";
+import { useEffect } from "react";
+import { api } from "../../services/api";
 
 export default function Continent(){
+  useEffect(() => {
+    api.get('continents/north-america').then(r => console.log(r.data))
+  }, [])
   return(
   <Box pb="12">
     <Header />

@@ -1,50 +1,35 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.min.css'
+import { api } from '../../services/api';
 
 // install Swiper modules
 SwiperCore.use([Navigation, Pagination, A11y]);
 
-const locations = [
-  {
-    id: 1,
-    name: 'América do Norte',
-    cta: 'O continente mais norte',
-    image: 'https://images.unsplash.com/photo-1582471698035-4b6fa4257c5d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    slug: 'north-america'
-  },
-  {
-    id: 2,
-    name: 'América do Sul',
-    cta: 'O continente mais sul',
-    image: 'https://images.unsplash.com/photo-1592322053945-88b9b538becc?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjR8fHNvdXRoJTIwYW1lcmljYXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=60',
-    slug: 'south-america'
-  },
-  {
-    id: 3,
-    name: 'Ásia',
-    cta: 'O continente mais oriente',
-    image: 'https://images.unsplash.com/photo-1535139262971-c51845709a48?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    slug: 'asia'
-  },
-  {
-    id: 4,
-    name: 'Europa',
-    cta: 'O continente mais antigo',
-    image: 'https://images.unsplash.com/photo-1485081669829-bacb8c7bb1f3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    slug: 'europe'
-  },
-  {
-    id: 5,
-    name: 'Oceania',
-    cta: 'O continente mais oceânico',
-    image: 'https://images.unsplash.com/photo-1574791325738-80142fc0e8c2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    slug: 'oceania'
-  }
-]
-
 export function ContinentSlider() {
+  const [continents, setContinents] = useState([])
+
+  useEffect(() => {
+    api.get('continent-list').then(r => setContinents(r.data))
+  }, [])
+  
+  if(continents.length === 0)
+  {
+    return(
+      <Box textAlign="center">
+        <Spinner        
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />       
+      </Box>
+    )
+  }
+
   return(
     <Swiper
       spaceBetween={50}
@@ -52,7 +37,7 @@ export function ContinentSlider() {
       navigation
       pagination={{ clickable: true }}
     >
-      {locations.map(location => 
+      {continents.map(location => 
         <SwiperSlide>
             <Flex
               as="a"
