@@ -9,7 +9,6 @@ import { api } from "../../services/api";
 import { useQuery } from "react-query";
 
 const getContinent = async (slug:string | string[]) => {
-  console.log(slug, 'na fn')
   const response = await api.get(`continents/${slug}`)
   return response.data
 }
@@ -30,11 +29,11 @@ export default function Continent({ params }) {
     <Header />
     <PageHeader title={data.continent.name} bgImage="https://images.unsplash.com/photo-1485081669829-bacb8c7bb1f3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" />
     <Box maxW="1200" mt="16" mx="auto" px="3">
-      <Stack direction={["column", "row"]} spacing="24px">
-        <Text w={["100%", "50%"]}>
+      <Stack direction={["column", "column", "row"]} spacing="24px">
+        <Text w={["100%", "100%", "50%"]}>
           {data.continent.description}
         </Text>
-        <Flex w={["100%", "50%"]} justifyContent="space-around">
+        <Flex w={["100%", "100%", "50%"]} justifyContent="space-around">
           <Stack alignItems="center">
               <Text fontWeight="bold" color="brand.yellow" fontSize="4xl">{data.continent.countries_count}</Text>
               <Text fontWeight="bold">Paises</Text>
@@ -59,10 +58,12 @@ export default function Continent({ params }) {
       textAlign="left" fontSize="2xl" my="8" lineHeight="tall">
         Cidades 100+
       </Text>
-      {console.log(data.continent.cities)}
-      <SimpleGrid columns={4} spacing={10}>
+
+      <SimpleGrid minChildWidth="250px" spacing={10}>
         {data.continent.cities.map(city => 
-          <CityCard key={city.id} city={city.city} country={city.state} image={city.image} />
+          <Box mx="auto">
+          <CityCard key={city.id} city={city.city} country={city.state} image={city.image}/>
+          </Box>
         )}
       </SimpleGrid>
     </Box>
