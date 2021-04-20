@@ -10,6 +10,7 @@ type ContinentList = {
 
 type Continent = {
   name: string
+  description: string
   image: string
   slug: string
   countries_count: number
@@ -40,11 +41,25 @@ const slugs = [
   'oceania'
 ]
 
+// random generator
+const generator = (schema, min = 1, max) => {
+  max = max || min
+  return Array.from({ length: faker.datatype.number({ min, max }) }).map(() => Object.keys(schema).reduce((entity, key) => {
+    entity[key] = faker.fake(schema[key])
+    return entity
+  }, {}))
+}
+
+// schema
+const citySchema = {
+  id: '{{datatype.number}}',
+  city: '{{address.city}}',
+  state: '{{address.stateAbbr}}',
+  image: '{{image.city}}'
+}
+
 export function makeServer() {
   const server = createServer({
-    serializers:{
-      application: ActiveModelSerializer
-    },
     models: {
       continent: Model.extend<Partial<Continent>>({}),
       continentList: Model.extend<Partial<ContinentList>>({})
@@ -52,7 +67,15 @@ export function makeServer() {
     factories: {
       continent: Factory.extend({
         name(i:number) { return continents[i] },
-        slug(i:number) { return slugs[i] }
+        slug(i:number) { return slugs[i] },
+        description() { return faker.lorem.paragraphs(2) },
+        countries_count() { return faker.datatype.number(50)},
+        languages_count() { return faker.datatype.number(25)},
+        cities_count() { return faker.datatype.number(200)},
+        cities() {
+          const city = generator(citySchema, 5, 20)
+          return city
+        }
       })
     },
     seeds(server) {
@@ -62,7 +85,10 @@ export function makeServer() {
     {
       this.namespace = 'api'
       this.timing = 750
-      this.get('/continents/:slug')
+      this.get('/continents/:slug', (schema, request) => {
+        let slug = request.params.slug
+        return schema.continents.findBy({ slug: slug });
+      })
       this.get('continent-list', () => [
         {
           id: 1,
